@@ -79,10 +79,7 @@
         newTask.appendChild(createNewTask);
         newTask.appendChild(taskDeletion);
         toDoList.appendChild(newTask);
-        taskDeletion.setAttribute("class", "task__delete");
-        taskDeletion.addEventListener("click", function () {
-          newTask.remove();
-        });
+        setupTaskDeletion(taskDeletion, newTask);
 
         // Zliczanie spacji
         const spaceCount = (taskValue.match(/ /g) || []).length;
@@ -116,11 +113,8 @@
       defaultTask.setAttribute("class", "task");
       defaultTask.appendChild(defaultTaskText);
       toDoList.appendChild(defaultTask);
-      defaultTaskDeletion.setAttribute("class", "task__delete");
+      setupTaskDeletion(defaultTaskDeletion, defaultTask);
       defaultTask.appendChild(defaultTaskDeletion);
-      defaultTaskDeletion.addEventListener("click", function () {
-        defaultTask.remove();
-      });
 
       // Kolejne standardowe zadanie na liście
       const defaultTask2 = document.createElement("li");
@@ -132,11 +126,8 @@
       defaultTask2.setAttribute("class", "task");
       defaultTask2.appendChild(defaultTask2Text);
       toDoList.appendChild(defaultTask2);
-      defaultTask2Deletion.setAttribute("class", "task__delete");
+      setupTaskDeletion(defaultTask2Deletion, defaultTask2);
       defaultTask2.appendChild(defaultTask2Deletion);
-      defaultTask2Deletion.addEventListener("click", function () {
-        defaultTask2.remove();
-      });
 
       // // 3  zadanie na liście
       // const defaultTask3 = document.createElement("li");
@@ -152,6 +143,23 @@
       // defaultTask3Deletion.addEventListener("click", function () {
       //   defaultTask3.remove();
       // });
+
+       function setupTaskDeletion(taskDeletion, task) {
+        taskDeletion.setAttribute("class", "task__delete");
+        taskDeletion.setAttribute("role", "button");
+        taskDeletion.setAttribute("tabindex", "0");
+        taskDeletion.setAttribute("aria-label", "Delete task");
+
+        taskDeletion.addEventListener("click", function () {
+          task.remove();
+        });
+        taskDeletion.addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            taskDeletion.click();
+          }
+        });
+      }
+
     </script>
   </body>
 </html>
