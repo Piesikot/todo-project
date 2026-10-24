@@ -16,36 +16,36 @@
       font-family: cursive;
     }
 
-    h1 {
+    .todo-app__title {
       font-size: 5vw;
     }
-    nav {
+    .task-form {
       position: absolute;
       top: -10px;
       right: 10px;
       text-align: center;
     }
-    .new-task {
+    .task-form__title {
       font-size: 2vmax;
       margin-bottom: 10px;
     }
-    input {
+    .task-form__input {
       width: 25vw;
       height: 30px;
       display: block;
     }
 
-    button {
+    .task-form__submit {
       margin-top: 10px;
     }
 
-    .to-do-list {
+    .todo-app__list {
       font-size: 3vw;
       max-width: 50%;
       margin-left: 30px;
     }
 
-    .task-deletion::after {
+    .task__delete::after {
       content: "\2716";
       color: red;
       margin-left: 5px;
@@ -54,31 +54,32 @@
     }
   </style>
   <body>
-    <nav>
-      <p class="new-task">New task:</p>
-      <input class="task" type="text" placeholder="Enter new task here" />
-      <button class="add-task-button">Add task</button>
+    <nav class="task-form">
+      <p class="task-form__title">New task:</p>
+      <input class="task-form__input" type="text" placeholder="Enter new task here" />
+      <button class="task-form__submit">Add task</button>
     </nav>
 
-    <div class="list-container">
-      <h1>To do list:</h1>
-      <ol class="to-do-list"></ol>
+    <div class="todo-app">
+      <h1 class="todo-app__title">To do list:</h1>
+      <ol class="todo-app__list"></ol>
     </div>
 
     <script>
-      const addTaskButton = document.querySelector(".add-task-button");
-      const toDoList = document.querySelector(".to-do-list");
+      const addTaskButton = document.querySelector(".task-form__submit");
+      const toDoList = document.querySelector(".todo-app__list");
 
       addTaskButton.addEventListener("click", function () {
         const newTask = document.createElement("li");
-        const taskValue = document.querySelector(".task").value;
+        const taskValue = document.querySelector(".task-form__input").value;
         const createNewTask = document.createTextNode(taskValue);
         const taskDeletion = document.createElement("span");
 
+        newTask.setAttribute("class", "task");
         newTask.appendChild(createNewTask);
         newTask.appendChild(taskDeletion);
         toDoList.appendChild(newTask);
-        taskDeletion.setAttribute("class", "task-deletion");
+        taskDeletion.setAttribute("class", "task__delete");
         taskDeletion.addEventListener("click", function () {
           newTask.remove();
         });
@@ -112,9 +113,10 @@
         "Remove this task by clicking ->"
       );
 
+      defaultTask.setAttribute("class", "task");
       defaultTask.appendChild(defaultTaskText);
       toDoList.appendChild(defaultTask);
-      defaultTaskDeletion.setAttribute("class", "task-deletion");
+      defaultTaskDeletion.setAttribute("class", "task__delete");
       defaultTask.appendChild(defaultTaskDeletion);
       defaultTaskDeletion.addEventListener("click", function () {
         defaultTask.remove();
@@ -127,9 +129,10 @@
         "Add your own tasks using the input in upper right corner."
       );
 
+      defaultTask2.setAttribute("class", "task");
       defaultTask2.appendChild(defaultTask2Text);
       toDoList.appendChild(defaultTask2);
-      defaultTask2Deletion.setAttribute("class", "task-deletion");
+      defaultTask2Deletion.setAttribute("class", "task__delete");
       defaultTask2.appendChild(defaultTask2Deletion);
       defaultTask2Deletion.addEventListener("click", function () {
         defaultTask2.remove();
@@ -144,7 +147,7 @@
 
       // defaultTask3.appendChild(defaultTask3Text);
       // toDoList.appendChild(defaultTask3);
-      // defaultTask3Deletion.setAttribute("class", "task-deletion");
+      // defaultTask3Deletion.setAttribute("class", "task__delete");
       // defaultTask3.appendChild(defaultTask3Deletion);
       // defaultTask3Deletion.addEventListener("click", function () {
       //   defaultTask3.remove();
