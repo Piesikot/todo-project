@@ -32,7 +32,35 @@
     .task-form__input {
       width: 25vw;
       height: 30px;
+    }
+
+    .task-form__input-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nav_language-button {
       display: block;
+      width: 30px;
+      height: 30px;
+      margin: 0 auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .nav_language-button-title {
+      margin: 0;
+      text-align: center;
+    }
+
+    .nav_language-button img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .task-form__submit {
@@ -54,9 +82,30 @@
     }
   </style>
   <body>
-    <nav class="task-form">
+  
+    <nav class="nav">
+        <p class="nav_language-button-title">Polski</p>
+        <button
+          class="nav_language-button"
+          type="button"
+          aria-label="Język Polski"
+          title="Język Polski"
+        >
+          <img src="src/images/en-to-pl.png" alt="Język Polski" />
+          
+      </button>
+
+    <div class="task-form">
       <p class="task-form__title">New task:</p>
-      <input class="task-form__input" type="text" placeholder="Enter new task here" />
+      <div class="task-form__input-row">
+
+       
+        <input
+          class="task-form__input"
+          type="text"
+          placeholder="Enter new task here"
+        />
+      </div>
       <button class="task-form__submit">Add task</button>
     </nav>
 
@@ -67,11 +116,68 @@
 
     <script>
       const addTaskButton = document.querySelector(".task-form__submit");
+      const languageButton = document.querySelector(".nav_language-button");
+      const languageImage = languageButton.querySelector("img");
+      const languageButtonTitle = document.querySelector(
+        ".nav_language-button-title"
+      );
+      const taskFormTitle = document.querySelector(".task-form__title");
+      const taskInput = document.querySelector(".task-form__input");
+      const todoTitle = document.querySelector(".todo-app__title");
       const toDoList = document.querySelector(".todo-app__list");
+      const imagePath = new URL("src/images/", window.location.href);
+      let currentLanguage = "en";
+
+      function setupTaskDeletion(taskDeletion, task) {
+        taskDeletion.setAttribute("class", "task__delete");
+        taskDeletion.setAttribute("role", "button");
+        taskDeletion.setAttribute("tabindex", "0");
+        taskDeletion.setAttribute("aria-label", "Delete task");
+
+        taskDeletion.addEventListener("click", function () {
+          task.remove();
+        });
+        taskDeletion.addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            taskDeletion.click();
+          }
+        });
+      }
+
+      function setLanguage(language) {
+        currentLanguage = language;
+        const isPolish = language === "pl";
+
+        document.documentElement.lang = language;
+        taskFormTitle.textContent = isPolish ? "Nowe zadanie:" : "New task:";
+        taskInput.placeholder = isPolish
+          ? "Wpisz tutaj nowe zadanie"
+          : "Enter new task here";
+        addTaskButton.textContent = isPolish ? "Dodaj zadanie" : "Add task";
+        todoTitle.textContent = isPolish ? "Lista zadań:" : "To do list:";
+        languageImage.src = new URL(
+          isPolish ? "pl-to-en.png" : "en-to-pl.png",
+          imagePath
+        ).href;
+        languageImage.alt = isPolish ? "English" : "Język Polski";
+        languageButton.title = languageImage.alt;
+        languageButton.setAttribute("aria-label", languageImage.alt);
+        languageButtonTitle.textContent = isPolish ? "English" : "Polski";
+        defaultTaskText.nodeValue = isPolish
+          ? "Usuń to zadanie, klikając ->"
+          : "Remove this task by clicking ->";
+        defaultTask2Text.nodeValue = isPolish
+          ? "Dodaj własne zadania za pomocą pola w prawym górnym rogu."
+          : "Add your own tasks using the input in upper right corner.";
+      }
+
+      languageButton.addEventListener("click", function () {
+        setLanguage(currentLanguage === "en" ? "pl" : "en");
+      });
 
       addTaskButton.addEventListener("click", function () {
         const newTask = document.createElement("li");
-        const taskValue = document.querySelector(".task-form__input").value;
+        const taskValue = taskInput.value;
         const createNewTask = document.createTextNode(taskValue);
         const taskDeletion = document.createElement("span");
 
@@ -85,20 +191,37 @@
         const spaceCount = (taskValue.match(/ /g) || []).length;
 
         if (taskValue === "") {
-          newTask.textContent = "Do nothing, just chill ;)";
+          newTask.textContent =
+            currentLanguage === "pl"
+              ? "Nic nie rób, wyluzuj ;)"
+              : "Do nothing, just chill ;)";
           newTask.appendChild(taskDeletion);
-        } else if (taskValue === " ") {
-          newTask.textContent = "Do spacebar press...";
+        } else if (taskValue === " ") { 
+          newTask.textContent =
+            currentLanguage === "pl"
+              ? "Naciśnij spację..."
+              : "Do spacebar press...";
         } else if (taskValue === "  ") {
-          newTask.textContent = "Do spacebar press twice...";
+          newTask.textContent =
+            currentLanguage === "pl"
+              ? "Naciśnij spację dwa razy..."
+              : "Do spacebar press twice...";
         } else if (taskValue === "   ") {
-          newTask.textContent = "Do spacebar press three times...";
+          newTask.textContent =
+            currentLanguage === "pl"
+              ? "Naciśnij spację trzy razy..."
+              : "Do spacebar press three times...";
         } else if (taskValue == spaceCount.length > 3) {
           console.log("spaceCount = " + taskValue.length);
           newTask.textContent =
-            "Do spacebar press " + taskValue.length + " times💪.";
+            (currentLanguage === "pl"
+              ? "Naciśnij spację "
+              : "Do spacebar press ") +
+            taskValue.length +
+            (currentLanguage === "pl" ? " razy💪." : " times💪.");
         } else if ((taskValue == spaceCount.length) === 666) {
-          newTask.textContent = "Go to church.";
+          newTask.textContent =
+            currentLanguage === "pl" ? "Idź do kościoła." : "Go to church.";
         }
         newTask.appendChild(taskDeletion);
       });
@@ -144,22 +267,7 @@
       //   defaultTask3.remove();
       // });
 
-       function setupTaskDeletion(taskDeletion, task) {
-        taskDeletion.setAttribute("class", "task__delete");
-        taskDeletion.setAttribute("role", "button");
-        taskDeletion.setAttribute("tabindex", "0");
-        taskDeletion.setAttribute("aria-label", "Delete task");
-
-        taskDeletion.addEventListener("click", function () {
-          task.remove();
-        });
-        taskDeletion.addEventListener("keydown", function (event) {
-          if (event.key === "Enter") {
-            taskDeletion.click();
-          }
-        });
-      }
-
+      setLanguage("en");
     </script>
   </body>
 </html>
